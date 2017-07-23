@@ -14,7 +14,6 @@ class Request(object):
     def __init__(self):
         self.name = ""
         self.price = ""
-        print("Object has been created")
 
     def set_name(self, name):
         self.name = name
