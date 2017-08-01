@@ -1,6 +1,8 @@
 # StockUtility
 
-*NOTE* IF YOU ARE USING A GMAIL ACCOUNT AS THE HOST EMAIL, BE SURE TO ALLOW EXTERNAL CONNECTIONS IN YOUR GMAIL SETTINGS *NOTE*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+IF YOU ARE USING A GMAIL ACCOUNT AS THE HOST EMAIL, BE SURE TO ALLOW EXTERNAL CONNECTIONS IN YOUR GMAIL SETTINGS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Libraries Used:
 
