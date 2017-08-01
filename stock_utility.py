@@ -1,18 +1,25 @@
 """"
     Stock Utility -- will grab current price of share from a specified company and will send you email updates
-    anytime that the price changes within a certain percentage.
+    regarding price changes
 """
 
 import requests
 import smtplib
-import time
+import sys
+import tkinter as tk
 from tkinter import messagebox
+
+# Constants
+HOST_EMAIL = ""
+HOST_PASS = ""
+RECIPIENT_EMAIL = ""
+RECIPIENT_PASS = ""
 
 
 class Request(object):
 
-    def __init__(self):
-        self.name = ""
+    def __init__(self, name):
+        self.name = name
         self.price = ""
 
     def set_name(self, name):
@@ -23,33 +30,10 @@ class Request(object):
     def page_found(self, page_content, unknown_search):
         return page_content.find(unknown_search)
 
-    # experimentation with decorators that will log the time of each search
-    def time_decorator(self, search_function):
-        """
-        This will let us know how long it took our look-up function to run
-        """
-
-        def wrapper(*original_args):
-            t1 = time.time()
-            search_function(original_args)
-            t2 = time.time()
-            print("The search utility took %s seconds to run." % str(t2 - t1) + "\n")
-            return
-
-        return wrapper
-
-
-    def read_file_contents(self):
-        with open("portfolio.txt") as inp:
-            data = set(inp.read().splitlines())
-            return data
-
-
-    # @time_decorator
+    # method that will actually scrape the chosen company's stock price
     def grab_info(self):
         # variables/deliverables
         comp_name = self.name
-        print(comp_name)
         url = "http://search.nasdaq.com/search?q="
         unknown_search = 'HTTP 404. The page you requested could not be found.'
         price_query = '<div id="qwidget_lastsale" class="qwidget-dollar">'
@@ -69,10 +53,13 @@ class Request(object):
 
         # end the program if the requested search does not exist
         if self.page_found(page, unknown_search) != -1:
+            root = tk.Tk()
+            root.withdraw()
             messagebox.showerror(title="Error", message="Sorry, the requested company wasn't "
                                                         "found in the NASDAQ database. Please try redefining your search.")
             self.price = "Company not found"
-            return
+            sys.exit()
+
 
         new_start_index = page.find(price_query) + len(price_query)
         new_end_index = page.find("</div>", new_start_index)
@@ -82,21 +69,13 @@ class Request(object):
 
         name = page[new_title_start_index:new_title_end_index]
 
-        print("Current price of %s stock" % name)
         share_price = page[new_start_index:new_end_index]
 
-        #gui.lb.insert(END, name + "   " + share_price)
-
         # calls the function that will send email alerts
-        # send_email(str(companyName), str(share_price))
-        try:
-            self.price = share_price
-            #gui.pps.set(share_price)
-        except ValueError:
-            pass
+        self.send_email(str(comp_name), str(share_price))
+        self.price = share_price
 
-
-    # anytime that the price of a stock changes by more than 1%, an automated email will be sent to the user.
+    # any time that the price of a stock changes by more than 1%, an automated email will be sent to the user.
     def send_email(self, company, price):
         body = "Price of {} shares has updated. Price is now {}".format(company, price)
 
@@ -106,14 +85,11 @@ class Request(object):
         server = smtplib.SMTP('smtp.gmail.com:587')
         server.ehlo()
         server.starttls()
-        server.login('HOST EMAIL', 'HOST PASSWORD')
-
-        server.sendmail("HOST EMAIL", "RECIPIENT'S EMAIL", msg)
+        server.login(HOST_EMAIL, HOST_PASS)
+        server.sendmail(RECIPIENT_EMAIL, RECIPIENT_PASS, msg)
         server.quit()
 
-    #handles our button_clicked event
-    def event_handler(self, event):
-        self.grab_info()
+
 
 
 
