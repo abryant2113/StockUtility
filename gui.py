@@ -1,14 +1,23 @@
 import tkinter as tk
+import time
 from stock_utility import Request
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 
 
+# method that will continue periodically sending updates regarding changes in the stock price
 def my_info():
-    my_obj = Request()
-    my_obj.set_name(company_name.get())
-    pps.set(my_obj.price)
-    lb.insert(END, my_obj.name + "   " + my_obj.price)
+    tk.messagebox.askokcancel(title="Loop now running", message="The script will now send you periodic price updates.")
+    root.destroy()
+    comp = company_name.get()
+    request_obj = Request(comp)
+
+    # sleep timer is set to 300 seconds by default, but can be adjusted to fit your needs.
+    while True:
+        request_obj.grab_info()
+        time.sleep(300)
+
 
 # handles the enter keystroke event
 def event_handler(event):
@@ -16,7 +25,7 @@ def event_handler(event):
 
 # tkinter gui
 root = Tk()
-root.geometry("375x300")
+root.geometry("375x180")
 root.title("StockUtility V1.0")
 root.resizable(width=False, height=False)
 
@@ -33,32 +42,19 @@ panel = tk.Label(mainframe, image=img)
 panel.grid(row=0, sticky=NSEW)
 
 tk.Label(mainframe, text="Company").grid(row=1, column=0, sticky=N + S + W)
-tk.Label(mainframe, text="Price").grid(row=2, column=0, sticky=N + S + W)
 
-company_entry = ttk.Entry(mainframe, width=8, textvariable=company_name)
+company_entry = ttk.Entry(mainframe, width=48, textvariable=company_name)
 company_entry.grid(row=1, column=0, sticky=N + S + E)
 company_entry.focus()
 
-tk.Label(mainframe, textvariable=pps).grid(row=2, column=0, sticky=N + S + E)
 tk.Button(mainframe, text="Search", command=lambda: my_info()).grid(row=4, sticky=NSEW)
 
-# stores the contents from the portfolio file in a set for listbox access
-#lit = stock_utility.Utility.read_file_contents
-#list = {}
-
-# creates the listbox that will contains our current portfolio data
-lb = Listbox(mainframe, height=5, width=50)
-lb.grid(row=5, column=0, sticky=NSEW)
-
-# adds all of our recent searches from the "portfolio.txt" file into our listbox.
-#for s in lit:
- #   lb.insert(END, str(s))
-
+# packs in all of the widgets
 for child in mainframe.winfo_children():
     child.grid_configure(padx=5, pady=5)
 
-root.bind('<Return>', lambda: event_handler())
-
+# allows the user to hit the return key instead of clicking the search button
+root.bind('<Return>', event_handler)
 root.mainloop()
 
 
