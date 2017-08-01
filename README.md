@@ -1,5 +1,12 @@
 # StockUtility
-In order to use, be sure to fill out the four constants in StockUtility.py:
+
+*NOTE* IF YOU ARE USING A GMAIL ACCOUNT AS THE HOST EMAIL, BE SURE TO ALLOW EXTERNAL CONNECTIONS IN YOUR GMAIL SETTINGS *NOTE*
+
+Libraries Used:
+
+Tkinter, SMTPLib, Requests
+
+In order to use properly, be sure to fill out the four constants in StockUtility.py:
 
 HOST_EMAIL:
 
